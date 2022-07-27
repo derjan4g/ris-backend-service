@@ -10,12 +10,7 @@ import de.bund.digitalservice.ris.domain.docx.DocxImagePart;
 import de.bund.digitalservice.ris.utils.DocxConverter;
 import de.bund.digitalservice.ris.utils.DocxConverterException;
 import java.awt.Dimension;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringReader;
-import java.util.ArrayList;
+import java.io.*;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -31,6 +26,10 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
+import org.docx4j.Docx4J;
+import org.docx4j.convert.out.HTMLSettings;
+import org.docx4j.convert.out.html.SdtToListSdtTagHandler;
+import org.docx4j.convert.out.html.SdtWriter;
 import org.docx4j.model.listnumbering.ListNumberingDefinition;
 import org.docx4j.openpackaging.contenttype.ContentTypes;
 import org.docx4j.openpackaging.exceptions.Docx4JException;
@@ -135,36 +134,31 @@ public class DocxConverterService {
     CompletableFuture<ResponseBytes<GetObjectResponse>> futureResponse =
         client.getObject(request, AsyncResponseTransformer.toBytes());
 
-    List<DocUnitDocx> packedList = new ArrayList<>();
-    DocUnitBorderNumber[] lastBorderNumber = {null};
-    DocUnitNumberingList[] lastNumberingList = {null};
-
     return Mono.fromFuture(futureResponse)
-        .map(response -> getDocumentParagraphs(response.asInputStream()))
         .map(
-            docUnitDocxList -> {
-              docUnitDocxList.forEach(
-                  element -> {
-                    if (packBorderNumberElements(element, packedList, lastBorderNumber)) {
-                      return;
-                    }
+            response -> {
+              WordprocessingMLPackage mlPackage;
+              try {
+                mlPackage = WordprocessingMLPackage.load(response.asInputStream());
+              } catch (Docx4JException e) {
+                throw new DocxConverterException("Couldn't load docx file!", e);
+              }
+              SdtWriter.registerTagHandler("HTML_ELEMENT", new SdtToListSdtTagHandler());
 
-                    if (packNumberingListEntries(element, packedList, lastNumberingList)) {
-                      return;
-                    }
+              HTMLSettings htmlSettings = Docx4J.createHTMLSettings();
+              // htmlSettings.setImageDirPath(imgDir.resolve("images").toString());
+              // htmlSettings.setImageTargetUri("images");
 
-                    packedList.add(element);
-                  });
+              OutputStream os = new ByteArrayOutputStream();
 
-              String content = null;
-              if (!docUnitDocxList.isEmpty()) {
-                content =
-                    packedList.stream()
-                        .map(DocUnitDocx::toHtmlString)
-                        .collect(Collectors.joining());
+              try {
+                htmlSettings.setOpcPackage(mlPackage);
+                Docx4J.toHTML(htmlSettings, os, Docx4J.FLAG_NONE);
+              } catch (Docx4JException e) {
+                throw new DocxConverterException("Couldn't process docx file", e);
               }
 
-              return new Docx2Html(content);
+              return new Docx2Html(os.toString());
             });
   }
 

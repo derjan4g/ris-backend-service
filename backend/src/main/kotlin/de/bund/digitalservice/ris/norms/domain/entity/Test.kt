@@ -37,7 +37,7 @@ class Test {
                 number,
                 explanation,
                 expirationDate,
-                isResolutionMajority,
+                isResolutionMajority
             )
         )
 

@@ -8,7 +8,7 @@ data class Field<T>(
     val type: FieldType,
     val refersTo: Identifier? = null,
     val version: Int = 0,
-    val order: Int = 0,
+    val order: Int = 0
 ) {
     val section: FieldSection
         get() = type.section
@@ -19,5 +19,3 @@ data class Field<T>(
         }
     }
 }
-
-

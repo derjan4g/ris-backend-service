@@ -1,38 +1,37 @@
 package de.bund.digitalservice.ris.norms.domain.entity
 
-import de.bund.digitalservice.ris.norms.domain.value.FieldType
+import de.bund.digitalservice.ris.norms.domain.value.MetadataType
 import java.time.LocalDate
 
 class Test {
     fun main(args: Array<String>) {
-        val pageCount = Field(
+        val pageCount = Metadatum(
             value = "1022",
-            type = FieldType.PAGE_COUNT
+            type = MetadataType.PAGE_COUNT
         )
 
-        val number = Field(
+        val number = Metadatum(
             value = 25,
-            type = FieldType.NUMBER
+            type = MetadataType.NUMBER
         )
-        val explanation = Field(
+        val explanation = Metadatum(
             value = "lorem ipsum dolor",
-            type = FieldType.EXPLANATION
+            type = MetadataType.EXPLANATION
         )
 
         // 1. If setting the value of IsResolutionMajority to string "true", then the flow will break
-        val isResolutionMajority = Field(
+        val isResolutionMajority = Metadatum(
             value = true,
-            type = FieldType.IS_RESOLUTION_MAJORITY
+            type = MetadataType.IS_RESOLUTION_MAJORITY
         )
 
-        val expirationDate = Field(
+        val expirationDate = Metadatum(
             value = LocalDate.now(),
-            type = FieldType.EXPIRATION_DATE
+            type = MetadataType.EXPIRATION_DATE
         )
 
         val norm = Norm(
-            Identifier(),
-            listOf(
+            metadata = listOf(
                 pageCount,
                 number,
                 explanation,

@@ -115,6 +115,10 @@ dependencies {
   annotationProcessor "org.projectlombok:lombok"
 
   developmentOnly "org.springframework.boot:spring-boot-devtools"
+  if (System.getenv().containsKey("DEV")) {
+    // Enable hot reloading w/ Skaffold
+    implementation "org.springframework.boot:spring-boot-devtools"
+  }
 
   testImplementation("org.springframework.boot:spring-boot-starter-test") {
     exclude group: "org.mockito", module: "mockito-core"
@@ -236,7 +240,6 @@ bootBuildImage {
   def containerImageVersion = System.getenv("CONTAINER_IMAGE_VERSION") ?: "latest"
 
   imageName = "${containerRegistry}/${containerImageName}:${containerImageVersion}"
-  builder = "paketobuildpacks/builder@sha256:8c317e17e87583e0ea8bfc2ffd2952b684d1028be2a40317af8f791f72b85f4e" // pin to version 0.1.313-tiny
   publish = false
   docker {
     publishRegistry {

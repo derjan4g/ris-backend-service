@@ -16,7 +16,7 @@ fileignoreconfig:
   - filename: .github/workflows/secrets-check.yml
     checksum: 335f81e88f030498a8c4480c0be3fccc7347ae9ce2808d8580f656b80d982774
   - filename: backend/build.gradle
-    checksum: fbafbe22948f73ba16f75a5624863301a620c1243cd1d482fa5d1c6c321dd77c
+    checksum: 11a061dcd6ee042ac9d3589f817f24bdc63a016d3a672b13abdfd4efbae7cfa4
   - filename: backend/src/main/java/de/bund/digitalservice/ris/caselaw/adapter/SendInBlueHttpMailSender.java
     checksum: 5ac01c3b6a5d2909ffbc054ac98d43962047e762b86654207591aeaecdf7a434
   - filename: backend/src/main/java/de/bund/digitalservice/ris/caselaw/config/MailConfig.java

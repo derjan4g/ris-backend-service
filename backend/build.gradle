@@ -11,6 +11,7 @@ plugins {
   id "com.gorylenko.gradle-git-properties" version "2.4.1"
   id "com.adarshr.test-logger" version "3.2.0"
   id "com.github.ben-manes.versions" version "0.44.0"
+  id "life.expert.archidoc" version "1.0.10"
 }
 
 group = "de.bund.digitalservice"
@@ -233,6 +234,22 @@ sonarqube {
 }
 
 project.tasks["sonarqube"].dependsOn jacocoTestReport
+project.tasks["archidoc"].dependsOn build
+
+archidoc {
+  file "$buildDir/architecture/classdiagram.dot"
+  packages = [
+    "de.bund.digitalservice.ris.caselaw.domain" //,
+    //"de.bund.digitalservice.ris.norms.domain"
+  ]
+  enableInterClassDependencies true
+  enableClassInfo true
+  enableFieldInfo true
+  enableMethodInfo true
+
+  //enableAllInfo false
+  //verbose false
+}
 
 bootBuildImage {
   def containerRegistry = System.getenv("CONTAINER_REGISTRY") ?: "ghcr.io"

@@ -114,10 +114,11 @@ dependencies {
   compileOnly "org.projectlombok:lombok"
   annotationProcessor "org.projectlombok:lombok"
 
-  developmentOnly "org.springframework.boot:spring-boot-devtools"
-  if (System.getenv().containsKey("DEV")) {
-    // Enable hot reloading w/ Skaffold
-    implementation "org.springframework.boot:spring-boot-devtools"
+  if (project.hasProperty("devtools")) {
+    // Enable continuous sync/reloading w/ Skaffold
+    runtimeOnly "org.springframework.boot:spring-boot-devtools"
+  } else {
+    developmentOnly "org.springframework.boot:spring-boot-devtools"
   }
 
   testImplementation("org.springframework.boot:spring-boot-starter-test") {

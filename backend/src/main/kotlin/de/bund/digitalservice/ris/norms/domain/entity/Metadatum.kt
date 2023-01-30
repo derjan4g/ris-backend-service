@@ -8,13 +8,12 @@ data class Metadatum<T>(
     val type: MetadataType,
     val refersTo: Identifier? = null,
     val version: Int = 0,
-    val order: Int = 0
-) {
+    val order: Int = 0,
     val section: MetadatumSection
-        get() = type.section
+) {
 
     init {
-        if (value!!::class != type.type) {
+        if (value!!::class != type.type || !type.parentSections.contains(section.name)) {
             throw IllegalArgumentException()
         }
     }

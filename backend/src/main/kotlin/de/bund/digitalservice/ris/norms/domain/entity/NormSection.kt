@@ -1,8 +1,7 @@
 package de.bund.digitalservice.ris.norms.domain.entity
 
-data class Norm(
+data class NormSection(
     val identifier: Identifier = Identifier(),
-    val metadata: List<Metadatum<*>>,
     val articles: List<Article> = listOf(),
-    val sections: List<NormSection> = listOf()
+    val parent: NormSection? = null
 )

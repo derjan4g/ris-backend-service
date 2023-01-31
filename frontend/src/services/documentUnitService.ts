@@ -7,6 +7,9 @@ import httpClient, {
 
 interface DocumentUnitService {
   getAllListEntries(): Promise<ServiceResponse<DocumentUnitListEntry[]>>
+  getAllListEntriesFlux(
+    onFluxUpdate: (listEntries: DocumentUnitListEntry[]) => void
+  ): void
   getByDocumentNumber(
     documentNumber: string
   ): Promise<ServiceResponse<DocumentUnit>>
@@ -19,6 +22,34 @@ interface DocumentUnitService {
 }
 
 const service: DocumentUnitService = {
+  async getAllListEntriesFlux(
+    onFluxUpdate: (listEntries: DocumentUnitListEntry[]) => void
+  ) {
+    const backendHost = process.env.BACKEND_HOST ?? ""
+    const response = await fetch(`${backendHost}/api/v1/caselaw/documentunits`)
+    if (!response.body) return
+    const stream = response.body.getReader()
+    const decoder = new TextDecoder()
+    let buffer = ""
+
+    while (true) {
+      const { done, value } = await stream.read()
+      if (done) break
+      buffer += decoder.decode(value)
+      // console.log(buffer)
+      try {
+        // The buffer-buildup looks like this:
+        // [{...}
+        // [{...},{...}
+        // [{...},{...},{...}]
+        // That's why we can only parse it as array during the loop if we append a closing bracket.
+        // Once it fully arrived, the closing bracket also came along, so we must not append it in the last step.
+        const jsonData = JSON.parse(buffer + (buffer.endsWith("]") ? "" : "]"))
+        onFluxUpdate(jsonData)
+      } catch (e) {}
+    }
+  },
+
   async getAllListEntries() {
     const response = await httpClient.get<DocumentUnitListEntry[]>(
       "caselaw/documentunits"

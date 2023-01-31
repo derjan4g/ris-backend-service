@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref } from "vue"
+import { onMounted, ref } from "vue"
 import { useRouter } from "vue-router"
 import DocumentUnitList from "@/components/DocumentUnitList.vue"
 import TextButton from "@/components/TextButton.vue"
@@ -8,9 +8,7 @@ import documentUnitService from "@/services/documentUnitService"
 
 const router = useRouter()
 
-const documentUnitListEntries = ref(
-  (await documentUnitService.getAllListEntries()).data
-)
+const documentUnitListEntries = ref([] as DocumentUnitListEntry[])
 
 async function handleDelete(documentUnitListEntry: DocumentUnitListEntry) {
   if (documentUnitListEntries.value) {
@@ -24,6 +22,12 @@ async function handleDelete(documentUnitListEntry: DocumentUnitListEntry) {
     }
   }
 }
+
+onMounted(async () => {
+  documentUnitService.getAllListEntriesFlux((listEntries) => {
+    documentUnitListEntries.value = listEntries
+  })
+})
 </script>
 
 <template>

@@ -1,6 +1,5 @@
 package de.bund.digitalservice.ris.norms.domain.value
 
-import de.bund.digitalservice.ris.norms.domain.entity.MetadatumSection
 import java.time.LocalDate
 import kotlin.reflect.KClass
 

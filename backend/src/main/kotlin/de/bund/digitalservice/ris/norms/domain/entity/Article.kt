@@ -8,4 +8,4 @@ data class Article(
     var title: String? = null,
     val marker: Marker,
     val paragraphs: List<Paragraph> = listOf()
-)
+) : Identifiable(identifier, ExpressionIdentifierType.ARTICLE)

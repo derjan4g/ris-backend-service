@@ -1,11 +1,10 @@
 package de.bund.digitalservice.ris.norms.domain.entity
 
-import java.util.UUID
+import de.bund.digitalservice.ris.norms.domain.value.Marker
 
-// TODO: Add article marker value class.
 data class Article(
-    val guid: UUID,
+    val identifier: Identifier = Identifier(),
     var title: String? = null,
-    val marker: String,
+    val marker: Marker,
     val paragraphs: List<Paragraph> = listOf()
 )

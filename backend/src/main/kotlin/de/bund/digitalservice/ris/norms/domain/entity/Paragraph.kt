@@ -1,6 +1,9 @@
 package de.bund.digitalservice.ris.norms.domain.entity
 
-import java.util.UUID
+import de.bund.digitalservice.ris.norms.domain.value.Marker
 
-// TODO: Add paragraph marker value class.
-data class Paragraph(val identifier: Identifier = Identifier(), var marker: String? = null, val text: String)
+data class Paragraph(
+    val identifier: Identifier = Identifier(),
+    var marker: Marker? = null,
+    val content: Content
+)

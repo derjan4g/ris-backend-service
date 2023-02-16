@@ -4,11 +4,13 @@ import de.bund.digitalservice.ris.norms.application.port.output.ParseJurisXmlOut
 import de.bund.digitalservice.ris.norms.domain.entity.Norm
 import de.bund.digitalservice.ris.norms.domain.value.UndefinedDate
 import de.bund.digitalservice.ris.norms.juris.importer.importData
+import org.springframework.stereotype.Component
 import reactor.core.publisher.Mono
 import java.time.LocalDate
 import java.util.UUID
 import de.bund.digitalservice.ris.norms.juris.importer.model.Norm as NormData
 
+@Component
 class JurisXmlParser() : ParseJurisXmlOutputPort {
     override fun parseJurisXml(command: ParseJurisXmlOutputPort.Command): Mono<Norm> {
         val data = importData(command.zipFile)

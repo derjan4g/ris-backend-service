@@ -73,7 +73,7 @@ public class DocumentUnitTransformer {
                           .documentUnitId(documentUnitDTO.getId())
                           .courtLocation(previousDecision.court().location())
                           .courtType(previousDecision.court().type())
-                          .fileNumber(previousDecision.fileNumber())
+                          .fileNumbers(previousDecision.fileNumbers())
                           .decisionDateTimestamp(previousDecision.date())
                           .build())
               .toList());

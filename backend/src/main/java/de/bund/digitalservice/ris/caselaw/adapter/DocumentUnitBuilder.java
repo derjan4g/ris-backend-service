@@ -30,6 +30,15 @@ public class DocumentUnitBuilder {
     return court;
   }
 
+  private List<String> getPreviousDecisionFileNumbers(PreviousDecisionDTO previousDecisionDTO) {
+    List<String> fileNumbers = null;
+    if (previousDecisionDTO.getFileNumbers() != null) {
+      fileNumbers =
+          previousDecisionDTO.getFileNumbers().stream().map(FileNumberDTO::getFileNumber).toList();
+    }
+    return fileNumbers;
+  }
+
   public static DocumentUnitBuilder newInstance() {
     return new DocumentUnitBuilder();
   }
@@ -63,7 +72,7 @@ public class DocumentUnitBuilder {
                               getCourtObject(
                                   previousDecisionDTO.getCourtType(),
                                   previousDecisionDTO.getCourtLocation()))
-                          .fileNumber(previousDecisionDTO.getFileNumber())
+                          .fileNumbers(getPreviousDecisionFileNumbers(previousDecisionDTO))
                           .date(previousDecisionDTO.getDecisionDateTimestamp())
                           .build())
               .toList();

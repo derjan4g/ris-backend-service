@@ -40,7 +40,7 @@ export type Texts = {
 export type PreviousDecision = {
   court?: Court
   date?: string
-  fileNumber?: string
+  fileNumbers?: string[]
 }
 
 export default class DocumentUnit {

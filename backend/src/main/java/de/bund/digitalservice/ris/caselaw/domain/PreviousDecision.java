@@ -5,4 +5,4 @@ import java.time.Instant;
 import lombok.Builder;
 
 @Builder
-public record PreviousDecision(Long id, Court court, Instant date, String fileNumber) {}
+public record PreviousDecision(Long id, Court court, Instant date, List<String> fileNumbers) {}

@@ -22,7 +22,7 @@ public class PreviousDecisionDTO {
 
   Instant decisionDateTimestamp;
 
-  String fileNumber;
+  @Transient List<FileNumberDTO> fileNumbers;
 
   String documentNumber;
   Long documentUnitId;

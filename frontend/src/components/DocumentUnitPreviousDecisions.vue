@@ -19,7 +19,7 @@ const defaultModel: PreviousDecision = {
     revoked: "",
   },
   date: "",
-  fileNumber: "",
+  fileNumber: [],
 }
 
 interface Props {

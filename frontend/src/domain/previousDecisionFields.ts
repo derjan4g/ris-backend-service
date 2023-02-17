@@ -23,8 +23,8 @@ export const previousDecisionFields: InputField[] = [
     },
   },
   {
-    name: "fileNumber",
-    type: InputType.TEXT,
+    name: "fileNumbers",
+    type: InputType.CHIPS,
     label: "Aktenzeichen",
     inputAttributes: {
       ariaLabel: "Aktenzeichen Rechtszug",

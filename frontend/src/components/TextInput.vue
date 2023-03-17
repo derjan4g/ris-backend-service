@@ -42,7 +42,7 @@ const tabindex = computed(() => (props.readOnly ? -1 : 0))
     :id="id"
     v-model.lazy="inputValue"
     :aria-label="ariaLabel"
-    class="bg-white border-2 border-blue-800 flex focus:outline-2 h-[3.75rem] hover:outline-2 input outline-0 outline-blue-800 outline-none outline-offset-[-4px] px-16 read-only:border-none read-only:hover:outline-0 w-full"
+    class="bg-white border-2 border-blue-800 ds-input flex focus:outline-2 h-[3.75rem] hover:outline-2 outline-0 outline-blue-800 outline-none outline-offset-[-4px] px-16 read-only:border-none read-only:hover:outline-0 w-full"
     :class="conditionalClasses"
     :placeholder="placeholder"
     :readonly="$props.readOnly"
@@ -54,41 +54,6 @@ const tabindex = computed(() => (props.readOnly ? -1 : 0))
 </template>
 
 <style lang="scss" scoped>
-.input {
-  flex-wrap: wrap;
-  align-content: space-between;
-
-  &:autofill {
-    @apply shadow-white text-inherit;
-  }
-
-  &:autofill:focus {
-    @apply shadow-white text-inherit;
-  }
-
-  &__error {
-    @apply border-red-800 outline-red-800 bg-red-200;
-
-    &:autofill {
-      @apply shadow-error text-inherit;
-    }
-
-    &:autofill:focus {
-      @apply shadow-error text-inherit;
-    }
-  }
-
-  &__readonly {
-    &:focus {
-      @apply outline-none;
-    }
-  }
-
-  &__fullheight {
-    @apply h-full;
-  }
-}
-
 .expand-enter-from {
   max-height: 0;
 }

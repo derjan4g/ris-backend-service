@@ -56,7 +56,11 @@ const dateInputAttributes: BaseInputAttributes = {
     <h1 class="font-bold text-24">Text Input</h1>
 
     <h2>Regular Text Input</h2>
-    <TextInput id="regularTextInput" aria-label="regular text input" value="" />
+    <TextInput
+      id="regularTextInput"
+      aria-label="regular text ds-input"
+      value=""
+    />
 
     <h2>Text Input with Placeholder</h2>
     <TextInput

@@ -22,6 +22,7 @@ const { documentUnit, error } = await loadDocumentUnit()
   <DocumentUnitPublication
     v-if="documentUnit"
     :document-unit="(documentUnit as DocumentUnit)"
+    @update-document-unit="loadDocumentUnit"
   />
   <div v-else>
     <h2>{{ error?.title }}</h2>

@@ -11,6 +11,10 @@ const props = defineProps<{
   documentUnit: DocumentUnit
 }>()
 
+const emit = defineEmits<{
+  (e: "updateDocumentUnit"): void
+}>()
+
 const loadDone = ref(false)
 const lastPublishedXmlMail = ref<XmlMail>()
 const publishResult = ref<XmlMail>()
@@ -35,6 +39,7 @@ async function publishADocument(email: string) {
       title: "Email wurde versendet",
       description: "",
     }
+    emit("updateDocumentUnit")
   } else {
     errorMessage.value = response.error
   }

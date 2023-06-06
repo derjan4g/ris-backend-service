@@ -219,6 +219,7 @@ test.describe("ensuring the publishing of documentunits works as expected", () =
     await expect(page.locator("text=Email wurde versendet")).toBeVisible()
 
     await expect(page.locator("text=Letzte Veröffentlichung am")).toBeVisible()
+    await expect(page.locator("text=veröffentlicht")).toBeVisible()
   })
 
   test("publication not possible when required norm abbreviation missing", async ({

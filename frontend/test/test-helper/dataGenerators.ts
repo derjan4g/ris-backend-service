@@ -68,6 +68,10 @@ const METADATA_VALUE_GENERATORS: MetadataValueGenerators = {
   [MetadatumType.TEMPLATE_NAME]: generateString,
   [MetadatumType.UNDEFINED_DATE]: pickRandomUndefinedDate,
   [MetadatumType.TEXT]: generateString,
+  [MetadatumType.LINK]: generateString,
+  [MetadatumType.RELATED_DATA]: generateString,
+  [MetadatumType.EXTERNAL_DATA_NOTE]: generateString,
+  [MetadatumType.APPENDIX]: generateString,
 }
 
 const ALPHABET_CHARACTERS = "abcdefghijklmnopqrstuvwxyz"

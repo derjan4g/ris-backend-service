@@ -143,6 +143,10 @@ const DECODERS: MetadataValueDecoders = {
   [MetadatumType.TEMPLATE_NAME]: identity,
   [MetadatumType.UNDEFINED_DATE]: decodeUndefinedDate,
   [MetadatumType.TEXT]: identity,
+  [MetadatumType.LINK]: identity,
+  [MetadatumType.RELATED_DATA]: identity,
+  [MetadatumType.EXTERNAL_DATA_NOTE]: identity,
+  [MetadatumType.APPENDIX]: identity,
 }
 
 const ENCODERS: MetadataValueEncoders = {
@@ -189,6 +193,10 @@ const ENCODERS: MetadataValueEncoders = {
   [MetadatumType.TEMPLATE_NAME]: identity,
   [MetadatumType.UNDEFINED_DATE]: encodeUndefinedDate,
   [MetadatumType.TEXT]: identity,
+  [MetadatumType.LINK]: identity,
+  [MetadatumType.RELATED_DATA]: identity,
+  [MetadatumType.EXTERNAL_DATA_NOTE]: identity,
+  [MetadatumType.APPENDIX]: identity,
 }
 
 /**

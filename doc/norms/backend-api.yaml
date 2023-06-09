@@ -311,6 +311,10 @@ components:
         - TEMPLATE_NAME
         - UNDEFINED_DATE
         - TEXT
+        - LINK
+        - RELATED_DATA
+        - EXTERNAL_DATA_NOTE
+        - APPENDIX
 
     MetadataSectionName:
       description: A field that indicates the name of the section
@@ -336,6 +340,7 @@ components:
         - DIVERGENT_EXPIRATION_DEFINED
         - DIVERGENT_EXPIRATION_UNDEFINED
         - CATEGORIZED_REFERENCE
+        - DIGITAL_EVIDENCE
 
     MetadataSection:
       type: object
@@ -562,18 +567,6 @@ components:
         eli:
           $ref: '#/components/schemas/ELI'
         completeCitation:
-          type: string
-          example: ''
-        digitalEvidenceLink:
-          type: string
-          example: ''
-        digitalEvidenceRelatedData:
-          type: string
-          example: ''
-        digitalEvidenceExternalDataNote:
-          type: string
-          example: ''
-        digitalEvidenceAppendix:
           type: string
           example: ''
         isExpirationDateTemp:

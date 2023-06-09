@@ -65,11 +65,6 @@ classDiagram
     String footnoteStateLaw
     String footnoteEuLaw
 
-    String digitalEvidenceLink
-    String digitalEvidenceRelatedData
-    String digitalEvidenceExternalDataNote
-    String digitalEvidenceAppendix
-
     String celexNumber
 
     String text
@@ -132,6 +127,7 @@ classDiagram
      DIVERGENT_EXPIRATION_DEFINED
      DIVERGENT_EXPIRATION_UNDEFINED
      CATEGORIZED_REFERENCE
+     DIGITAL_EVIDENCE
   }
 
   class MetadatumType  {
@@ -178,6 +174,10 @@ classDiagram
     TEMPLATE_NAME
     UNDEFINED_DATE
     TEXT
+    LINK
+    RELATED_DATA
+    EXTERNAL_DATA_NOTE
+    APPENDIX
   }
 
   class FileReference {

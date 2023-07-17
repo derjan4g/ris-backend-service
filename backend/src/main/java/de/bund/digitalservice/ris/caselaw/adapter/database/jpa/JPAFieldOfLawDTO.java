@@ -5,6 +5,8 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import java.util.Set;
@@ -53,6 +55,14 @@ public class JPAFieldOfLawDTO {
   @OneToMany(cascade = CascadeType.ALL)
   @JoinColumn(name = "field_of_law_id")
   Set<JPANormDTO> norms;
+
+  @ManyToMany
+  @JoinTable(
+      name = "lookuptable_field_of_law_link",
+      joinColumns = @JoinColumn(name = "field_of_law_id", referencedColumnName = "id"),
+      inverseJoinColumns =
+          @JoinColumn(name = "linked_field_of_law_id", referencedColumnName = "id"))
+  Set<JPAFieldOfLawDTO> linkedFieldsOfLaw;
 
   @Column(name = "children_count")
   Integer childrenCount;

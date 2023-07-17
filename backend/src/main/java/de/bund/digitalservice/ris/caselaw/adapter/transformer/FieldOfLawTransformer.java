@@ -84,7 +84,7 @@ public class FieldOfLawTransformer {
     if (jPAFieldOfLawDTO.getLinkedFieldsOfLaw() != null) {
       linkedFields =
           jPAFieldOfLawDTO.getLinkedFieldsOfLaw().stream()
-              .map(FieldOfLawDTO::getIdentifier)
+              .map(JPAFieldOfLawDTO::getIdentifier)
               .toList();
     }
 

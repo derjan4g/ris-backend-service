@@ -241,19 +241,13 @@ class LookupTableImporterServiceTest {
   @Test
   void testImportFieldOfLawLookupTable() {
     JPANormDTO childNorm1 =
-        JPANormDTO.builder()
-            .jpaFieldOfLawDTO(null)
-            .abbreviation("normabk 2.1")
-            .singleNormDescription("§ 2.1")
-            .build();
-    JPANormDTO childNorm2 =
-        JPANormDTO.builder().jpaFieldOfLawDTO(null).abbreviation("normabk 2.2").build();
+        JPANormDTO.builder().abbreviation("normabk 2.1").singleNormDescription("§ 2.1").build();
+
+    JPANormDTO childNorm2 = JPANormDTO.builder().abbreviation("normabk 2.2").build();
     Set<JPANormDTO> childNorms = Set.of(childNorm1, childNorm2);
 
-    JPAKeywordDTO childKeyword1 =
-        JPAKeywordDTO.builder().jpaFieldOfLawDTO(null).value("schlagwort 2.1").build();
-    JPAKeywordDTO childKeyword2 =
-        JPAKeywordDTO.builder().jpaFieldOfLawDTO(null).value("schlagwort 2.3").build();
+    JPAKeywordDTO childKeyword1 = JPAKeywordDTO.builder().value("schlagwort 2.1").build();
+    JPAKeywordDTO childKeyword2 = JPAKeywordDTO.builder().value("schlagwort 2.3").build();
     Set<JPAKeywordDTO> childKeywords = Set.of(childKeyword1, childKeyword2);
 
     JPAFieldOfLawDTO parent =

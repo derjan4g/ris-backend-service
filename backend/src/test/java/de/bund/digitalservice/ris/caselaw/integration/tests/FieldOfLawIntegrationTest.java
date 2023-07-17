@@ -8,6 +8,7 @@ import de.bund.digitalservice.ris.caselaw.TestConfig;
 import de.bund.digitalservice.ris.caselaw.adapter.AuthService;
 import de.bund.digitalservice.ris.caselaw.adapter.FieldOfLawController;
 import de.bund.digitalservice.ris.caselaw.adapter.FieldOfLawService;
+import de.bund.digitalservice.ris.caselaw.adapter.database.jpa.JPAFieldOfLawRepository;
 import de.bund.digitalservice.ris.caselaw.adapter.database.r2dbc.PostgresFieldOfLawRepositoryImpl;
 import de.bund.digitalservice.ris.caselaw.adapter.database.r2dbc.lookuptable.DatabaseFieldOfLawRepository;
 import de.bund.digitalservice.ris.caselaw.adapter.database.r2dbc.lookuptable.FieldOfLawDTO;
@@ -15,6 +16,7 @@ import de.bund.digitalservice.ris.caselaw.adapter.database.r2dbc.lookuptable.Nor
 import de.bund.digitalservice.ris.caselaw.adapter.database.r2dbc.lookuptable.NormRepository;
 import de.bund.digitalservice.ris.caselaw.config.FlywayConfig;
 import de.bund.digitalservice.ris.caselaw.config.PostgresConfig;
+import de.bund.digitalservice.ris.caselaw.config.PostgresJPAConfig;
 import de.bund.digitalservice.ris.caselaw.config.SecurityConfig;
 import de.bund.digitalservice.ris.caselaw.domain.DocumentUnitService;
 import de.bund.digitalservice.ris.caselaw.domain.UserService;
@@ -39,6 +41,7 @@ import org.testcontainers.junit.jupiter.Container;
       FieldOfLawService.class,
       FlywayConfig.class,
       PostgresConfig.class,
+      PostgresJPAConfig.class,
       PostgresFieldOfLawRepositoryImpl.class,
       SecurityConfig.class,
       AuthService.class,
@@ -60,8 +63,9 @@ class FieldOfLawIntegrationTest {
 
   @Autowired private RisWebTestClient risWebTestClient;
   @Autowired private DatabaseFieldOfLawRepository repository;
-  @Autowired private NormRepository normRepository;
 
+  @Autowired private JPAFieldOfLawRepository jpaFieldOfLawRepository;
+  @Autowired private NormRepository normRepository;
   @MockBean private UserService userService;
   @MockBean ReactiveClientRegistrationRepository clientRegistrationRepository;
   @MockBean private DocumentUnitService service;
@@ -70,6 +74,7 @@ class FieldOfLawIntegrationTest {
   void cleanUp() {
     repository.deleteAll().block();
     normRepository.deleteAll().block();
+    jpaFieldOfLawRepository.deleteAll();
   }
 
   @Test

@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.UUID;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -35,7 +36,8 @@ public class PostgresFieldOfLawRepositoryImpl implements FieldOfLawRepository {
       NormRepository normRepository,
       FieldOfLawLinkRepository fieldOfLawLinkRepository,
       DatabaseDocumentUnitRepository databaseDocumentUnitRepository,
-      DatabaseDocumentUnitFieldsOfLawRepository databaseDocumentUnitFieldsOfLawRepository) {
+      DatabaseDocumentUnitFieldsOfLawRepository databaseDocumentUnitFieldsOfLawRepository,
+      JPAFieldOfLawRepository jPAFieldOfLawRepository) {
 
     this.databaseFieldOfLawRepository = databaseFieldOfLawRepository;
     this.fieldOfLawKeywordRepository = fieldOfLawKeywordRepository;
@@ -43,6 +45,7 @@ public class PostgresFieldOfLawRepositoryImpl implements FieldOfLawRepository {
     this.fieldOfLawLinkRepository = fieldOfLawLinkRepository;
     this.databaseDocumentUnitRepository = databaseDocumentUnitRepository;
     this.databaseDocumentUnitFieldsOfLawRepository = databaseDocumentUnitFieldsOfLawRepository;
+    this.jPAFieldOfLawRepository = jPAFieldOfLawRepository;
   }
 
   @Override
@@ -54,10 +57,11 @@ public class PostgresFieldOfLawRepositoryImpl implements FieldOfLawRepository {
   }
 
   @Override
+  @Transactional(transactionManager = "jpaTransactionManager")
   public Mono<FieldOfLaw> findByIdentifier(String identifier) {
-    return jPAFieldOfLawRepository
-        .findByIdentifier(identifier)
-        .map(FieldOfLawTransformer::transformToDomain);
+    return Mono.just(
+        FieldOfLawTransformer.transformJPADTOToDomain(
+            jPAFieldOfLawRepository.findFirstByIdentifier(identifier)));
   }
 
   @Override

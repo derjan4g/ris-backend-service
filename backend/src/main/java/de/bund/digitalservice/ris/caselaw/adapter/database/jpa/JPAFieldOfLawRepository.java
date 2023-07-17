@@ -5,5 +5,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface JPAFieldOfLawRepository extends JpaRepository<JPAFieldOfLawDTO, Long> {
-  JPAFieldOfLawDTO findByIdentifier(String identifier);
+  JPAFieldOfLawDTO findFirstByIdentifier(String identifier);
 }

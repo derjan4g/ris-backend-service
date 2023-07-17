@@ -1,8 +1,11 @@
 package de.bund.digitalservice.ris.caselaw.adapter.database.jpa;
 
-import de.bund.digitalservice.ris.caselaw.adapter.database.r2dbc.lookuptable.DocumentTypeNewDTO;
-import de.bund.digitalservice.ris.caselaw.adapter.database.r2dbc.lookuptable.RegionDTO;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
@@ -10,24 +13,47 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Table;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder(toBuilder = true)
-@Table("norm_abbreviation")
+@Entity(name = "norm_abbreviation")
 public class JPANormAbbreviationDTO {
   @Id UUID id;
   String abbreviation;
+
+  @Column(name = "decision_date")
   LocalDate decisionDate;
+
+  @Column(name = "document_id")
   Integer documentId;
+
+  @Column(name = "document_number")
   String documentNumber;
+
+  @Column(name = "official_letter_abbreviation")
   String officialLetterAbbreviation;
+
+  @Column(name = "official_long_title")
   String officialLongTitle;
+
+  @Column(name = "official_short_title")
   String officialShortTitle;
+
   Character source;
-  @OneToMany() List<DocumentTypeNewDTO> documentTypes;
-  @OneToMany() List<RegionDTO> regions;
+
+  @ManyToMany()
+  @JoinTable(
+      name = "norm_abbreviation_document_type",
+      joinColumns = @JoinColumn(name = "norm_abbreviation_id"),
+      inverseJoinColumns = @JoinColumn(name = "document_type_id"))
+  List<JPADocumentTypeNewDTO> documentTypes;
+
+  @ManyToMany()
+  @JoinTable(
+      name = "norm_abbreviation_region",
+      joinColumns = @JoinColumn(name = "norm_abbreviation_id"),
+      inverseJoinColumns = @JoinColumn(name = "region_id"))
+  List<JPARegionDTO> regions;
 }

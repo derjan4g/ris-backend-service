@@ -1,6 +1,6 @@
 package de.bund.digitalservice.ris.caselaw.adapter.transformer;
 
-import de.bund.digitalservice.ris.caselaw.adapter.database.r2dbc.lookuptable.NormAbbreviationDTO;
+import de.bund.digitalservice.ris.caselaw.adapter.database.jpa.JPANormAbbreviationDTO;
 import de.bund.digitalservice.ris.caselaw.domain.lookuptable.DocumentTypeNew;
 import de.bund.digitalservice.ris.caselaw.domain.lookuptable.NormAbbreviation;
 import de.bund.digitalservice.ris.caselaw.domain.lookuptable.Region;
@@ -10,7 +10,7 @@ import java.util.List;
 public class NormAbbreviationTransformer {
   private NormAbbreviationTransformer() {}
 
-  public static NormAbbreviation transformDTO(NormAbbreviationDTO normAbbreviationDTO) {
+  public static NormAbbreviation transformDTO(JPANormAbbreviationDTO normAbbreviationDTO) {
     if (normAbbreviationDTO == null) {
       return null;
     }

@@ -1,5 +1,6 @@
 package de.bund.digitalservice.ris.caselaw.adapter.database.r2dbc;
 
+import de.bund.digitalservice.ris.caselaw.adapter.database.jpa.JPANormDTO;
 import de.bund.digitalservice.ris.caselaw.adapter.database.jpa.JPANormRepository;
 import de.bund.digitalservice.ris.caselaw.adapter.database.r2dbc.DocumentUnitDTO.DocumentUnitDTOBuilder;
 import de.bund.digitalservice.ris.caselaw.adapter.database.r2dbc.lookuptable.CourtDTO;
@@ -189,7 +190,7 @@ public class PostgresDocumentUnitRepositoryImpl implements DocumentUnitRepositor
         .flatMap(documentUnitDTO -> saveDeviatingEcli(documentUnitDTO, documentUnit))
         .flatMap(documentUnitDTO -> saveDeviatingDecisionDate(documentUnitDTO, documentUnit))
         .flatMap(documentUnitDTO -> saveIncorrectCourt(documentUnitDTO, documentUnit))
-        .flatMap(documentUnitDTO -> saveNorms(documentUnitDTO, documentUnit))
+        //        .flatMap(documentUnitDTO -> saveNorms(documentUnitDTO, documentUnit))
         .flatMap(this::injectStatus)
         .flatMap(this::injectProceedingDecisions)
         .flatMap(this::injectKeywords)
@@ -321,79 +322,79 @@ public class PostgresDocumentUnitRepositoryImpl implements DocumentUnitRepositor
             });
   }
 
-  public Mono<DocumentUnitDTO> saveNorms(
-      DocumentUnitDTO documentUnitDTO, DocumentUnit documentUnit) {
-
-    return documentUnitNormRepository
-        .findAllByDocumentUnitId(documentUnitDTO.getId())
-        .collectList()
-        .flatMap(
-            documentUnitNormDTOs -> {
-              List<DocumentUnitNorm> documentUnitNorms = new ArrayList<>();
-              if (documentUnit.contentRelatedIndexing() == null
-                  || documentUnit.contentRelatedIndexing().norms() == null)
-                return Mono.just(documentUnitDTO);
-
-              documentUnitNorms.addAll(documentUnit.contentRelatedIndexing().norms());
-
-              AtomicInteger normIndex = new AtomicInteger(0);
-              List<DocumentUnitNormDTO> toSave = new ArrayList<>();
-              List<DocumentUnitNormDTO> toDelete = new ArrayList<>();
-
-              documentUnitNormDTOs.forEach(
-                  documentUnitNormDTO -> {
-                    int index = normIndex.getAndIncrement();
-                    UUID normAbbreviationId = null;
-                    if (index < documentUnitNorms.size()) {
-                      DocumentUnitNorm currentNorm = documentUnitNorms.get(index);
-                      if (currentNorm.normAbbreviation() != null) {
-                        normAbbreviationId = currentNorm.normAbbreviation().id();
-                      }
-                      documentUnitNormDTO.normAbbreviationUuid = normAbbreviationId;
-                      documentUnitNormDTO.singleNorm = currentNorm.singleNorm();
-                      documentUnitNormDTO.dateOfVersion = currentNorm.dateOfVersion();
-                      documentUnitNormDTO.dateOfRelevance = currentNorm.dateOfRelevance();
-                      toSave.add(documentUnitNormDTO);
-                    } else {
-                      toDelete.add(documentUnitNormDTO);
-                    }
-                  });
-
-              while (normIndex.get() < documentUnitNorms.size()) {
-                int index = normIndex.getAndIncrement();
-                DocumentUnitNorm currentNorm = documentUnitNorms.get(index);
-                if (isEmptyNorm(currentNorm)) {
-                  continue;
-                }
-                UUID normAbbreviationId = null;
-                if (currentNorm.normAbbreviation() != null) {
-                  normAbbreviationId = currentNorm.normAbbreviation().id();
-                }
-                DocumentUnitNormDTO documentUnitNormDTO =
-                    DocumentUnitNormDTO.builder()
-                        .normAbbreviationUuid(normAbbreviationId)
-                        .singleNorm(currentNorm.singleNorm())
-                        .dateOfVersion(currentNorm.dateOfVersion())
-                        .dateOfRelevance(currentNorm.dateOfRelevance())
-                        .documentUnitId(documentUnitDTO.getId())
-                        .build();
-                toSave.add(documentUnitNormDTO);
-              }
-
-              return documentUnitNormRepository
-                  .deleteAll(toDelete)
-                  .then(
-                      documentUnitNormRepository
-                          .saveAll(toSave)
-                          .flatMap(this::injectNormAbbreviation)
-                          .collectList())
-                  .map(
-                      savedNormList -> {
-                        documentUnitDTO.setNorms(savedNormList);
-                        return documentUnitDTO;
-                      });
-            });
-  }
+  //  public Mono<DocumentUnitDTO> saveNorms(
+  //      DocumentUnitDTO documentUnitDTO, DocumentUnit documentUnit) {
+  //
+  //    return documentUnitNormRepository
+  //        .findAllByDocumentUnitId(documentUnitDTO.getId())
+  //        .collectList()
+  //        .flatMap(
+  //            documentUnitNormDTOs -> {
+  //              List<DocumentUnitNorm> documentUnitNorms = new ArrayList<>();
+  //              if (documentUnit.contentRelatedIndexing() == null
+  //                  || documentUnit.contentRelatedIndexing().norms() == null)
+  //                return Mono.just(documentUnitDTO);
+  //
+  //              documentUnitNorms.addAll(documentUnit.contentRelatedIndexing().norms());
+  //
+  //              AtomicInteger normIndex = new AtomicInteger(0);
+  //              List<DocumentUnitNormDTO> toSave = new ArrayList<>();
+  //              List<DocumentUnitNormDTO> toDelete = new ArrayList<>();
+  //
+  //              documentUnitNormDTOs.forEach(
+  //                  documentUnitNormDTO -> {
+  //                    int index = normIndex.getAndIncrement();
+  //                    UUID normAbbreviationId = null;
+  //                    if (index < documentUnitNorms.size()) {
+  //                      DocumentUnitNorm currentNorm = documentUnitNorms.get(index);
+  //                      if (currentNorm.normAbbreviation() != null) {
+  //                        normAbbreviationId = currentNorm.normAbbreviation().id();
+  //                      }
+  //                      documentUnitNormDTO.normAbbreviationUuid = normAbbreviationId;
+  //                      documentUnitNormDTO.singleNorm = currentNorm.singleNorm();
+  //                      documentUnitNormDTO.dateOfVersion = currentNorm.dateOfVersion();
+  //                      documentUnitNormDTO.dateOfRelevance = currentNorm.dateOfRelevance();
+  //                      toSave.add(documentUnitNormDTO);
+  //                    } else {
+  //                      toDelete.add(documentUnitNormDTO);
+  //                    }
+  //                  });
+  //
+  //              while (normIndex.get() < documentUnitNorms.size()) {
+  //                int index = normIndex.getAndIncrement();
+  //                DocumentUnitNorm currentNorm = documentUnitNorms.get(index);
+  //                if (isEmptyNorm(currentNorm)) {
+  //                  continue;
+  //                }
+  //                UUID normAbbreviationId = null;
+  //                if (currentNorm.normAbbreviation() != null) {
+  //                  normAbbreviationId = currentNorm.normAbbreviation().id();
+  //                }
+  //                DocumentUnitNormDTO documentUnitNormDTO =
+  //                    DocumentUnitNormDTO.builder()
+  //                        .normAbbreviationUuid(normAbbreviationId)
+  //                        .singleNorm(currentNorm.singleNorm())
+  //                        .dateOfVersion(currentNorm.dateOfVersion())
+  //                        .dateOfRelevance(currentNorm.dateOfRelevance())
+  //                        .documentUnitId(documentUnitDTO.getId())
+  //                        .build();
+  //                toSave.add(documentUnitNormDTO);
+  //              }
+  //
+  //              return documentUnitNormRepository
+  //                  .deleteAll(toDelete)
+  //                  .then(
+  //                      documentUnitNormRepository
+  //                          .saveAll(toSave)
+  //                          .flatMap(this::injectNormAbbreviation)
+  //                          .collectList())
+  //                  .map(
+  //                      savedNormList -> {
+  //                        documentUnitDTO.setNorms(savedNormList);
+  //                        return documentUnitDTO;
+  //                      });
+  //            });
+  //  }
 
   private boolean isEmptyNorm(DocumentUnitNorm currentNorm) {
     return currentNorm.singleNorm() == null
@@ -965,7 +966,7 @@ public class PostgresDocumentUnitRepositoryImpl implements DocumentUnitRepositor
   }
 
   private Mono<DocumentUnitDTO> injectNorms(DocumentUnitDTO documentUnitDTO) {
-    List<DocumentUnitNormDTO> norms =
+    List<JPANormDTO> norms =
         documentUnitNormRepository.findAllByDocumentUnitId(documentUnitDTO.getId());
     documentUnitDTO.setNorms(norms);
     return Mono.just(documentUnitDTO);

@@ -7,6 +7,7 @@ import de.bund.digitalservice.ris.caselaw.TestConfig;
 import de.bund.digitalservice.ris.caselaw.adapter.AuthService;
 import de.bund.digitalservice.ris.caselaw.adapter.NormAbbreviationController;
 import de.bund.digitalservice.ris.caselaw.adapter.NormAbbreviationService;
+import de.bund.digitalservice.ris.caselaw.adapter.database.jpa.JPANormAbbreviationRepository;
 import de.bund.digitalservice.ris.caselaw.adapter.database.r2dbc.lookuptable.DatabaseDocumentCategoryRepository;
 import de.bund.digitalservice.ris.caselaw.adapter.database.r2dbc.lookuptable.DatabaseDocumentTypeNewRepository;
 import de.bund.digitalservice.ris.caselaw.adapter.database.r2dbc.lookuptable.DatabaseNormAbbreviationDocumentTypeRepository;
@@ -22,6 +23,7 @@ import de.bund.digitalservice.ris.caselaw.adapter.database.r2dbc.lookuptable.Pos
 import de.bund.digitalservice.ris.caselaw.adapter.database.r2dbc.lookuptable.RegionDTO;
 import de.bund.digitalservice.ris.caselaw.config.FlywayConfig;
 import de.bund.digitalservice.ris.caselaw.config.PostgresConfig;
+import de.bund.digitalservice.ris.caselaw.config.PostgresJPAConfig;
 import de.bund.digitalservice.ris.caselaw.config.SecurityConfig;
 import de.bund.digitalservice.ris.caselaw.domain.DocumentUnitService;
 import de.bund.digitalservice.ris.caselaw.domain.EmailPublishService;
@@ -55,7 +57,8 @@ import software.amazon.awssdk.services.s3.S3AsyncClient;
       PostgresNormAbbreviationRepositoryImpl.class,
       SecurityConfig.class,
       AuthService.class,
-      TestConfig.class
+      TestConfig.class,
+      PostgresJPAConfig.class
     },
     controllers = {NormAbbreviationController.class})
 class NormAbbreviationIntegrationTest {
@@ -97,7 +100,8 @@ class NormAbbreviationIntegrationTest {
   }
 
   @Autowired private RisWebTestClient risWebTestClient;
-  @Autowired private DatabaseNormAbbreviationRepository repository;
+  @Autowired private DatabaseNormAbbreviationRepository writeRepository;
+  @Autowired private JPANormAbbreviationRepository repository;
   @Autowired private DatabaseDocumentTypeNewRepository documentTypeRepository;
   @Autowired private DatabaseDocumentCategoryRepository documentCategoryRepository;
   @Autowired private DatabaseRegionRepository regionRepository;
@@ -117,7 +121,7 @@ class NormAbbreviationIntegrationTest {
   void cleanUp() {
     normAbbreviationRegionRepository.deleteAll().block();
     normAbbreviationDocumentTypeRepository.deleteAll().block();
-    repository.deleteAll().block();
+    writeRepository.deleteAll().block();
     documentTypeRepository.deleteAll().block();
     documentCategoryRepository.deleteAll().block();
     regionRepository.deleteAll().block();
@@ -307,7 +311,7 @@ class NormAbbreviationIntegrationTest {
             .officialShortTitle("official short title 1")
             .source('S')
             .build();
-    repository.save(normAbbreviationDTO).block();
+    writeRepository.save(normAbbreviationDTO).block();
 
     normAbbreviationDTO =
         NormAbbreviationDTO.builder()
@@ -322,7 +326,7 @@ class NormAbbreviationIntegrationTest {
             .officialShortTitle("official short title 2")
             .source('T')
             .build();
-    repository.save(normAbbreviationDTO).block();
+    writeRepository.save(normAbbreviationDTO).block();
 
     normAbbreviationDTO =
         NormAbbreviationDTO.builder()
@@ -337,7 +341,7 @@ class NormAbbreviationIntegrationTest {
             .officialShortTitle("official short title 3")
             .source('U')
             .build();
-    repository.save(normAbbreviationDTO).block();
+    writeRepository.save(normAbbreviationDTO).block();
 
     normAbbreviationDTO =
         NormAbbreviationDTO.builder()
@@ -352,7 +356,7 @@ class NormAbbreviationIntegrationTest {
             .officialShortTitle("official short title 4")
             .source('V')
             .build();
-    repository.save(normAbbreviationDTO).block();
+    writeRepository.save(normAbbreviationDTO).block();
 
     normAbbreviationDTO =
         NormAbbreviationDTO.builder()
@@ -367,7 +371,7 @@ class NormAbbreviationIntegrationTest {
             .officialShortTitle("official short title 5")
             .source('W')
             .build();
-    repository.save(normAbbreviationDTO).block();
+    writeRepository.save(normAbbreviationDTO).block();
 
     normAbbreviationDTO =
         NormAbbreviationDTO.builder()
@@ -382,7 +386,7 @@ class NormAbbreviationIntegrationTest {
             .officialShortTitle("official short title 6")
             .source('X')
             .build();
-    repository.save(normAbbreviationDTO).block();
+    writeRepository.save(normAbbreviationDTO).block();
 
     normAbbreviationDTO =
         NormAbbreviationDTO.builder()
@@ -397,7 +401,7 @@ class NormAbbreviationIntegrationTest {
             .officialShortTitle("official short title 7")
             .source('Y')
             .build();
-    repository.save(normAbbreviationDTO).block();
+    writeRepository.save(normAbbreviationDTO).block();
 
     DocumentCategoryDTO documentCategoryDTO =
         DocumentCategoryDTO.builder()

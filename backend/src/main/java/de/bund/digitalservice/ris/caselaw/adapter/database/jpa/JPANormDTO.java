@@ -1,26 +1,37 @@
 package de.bund.digitalservice.ris.caselaw.adapter.database.jpa;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import java.time.Instant;
-import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Table;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table("document_unit_norm")
+@Entity(name = "document_unit_norm")
 public class JPANormDTO {
   @Id Long id;
+
+  @Column(name = "document_unit_id")
   Long documentUnitId;
-  UUID normAbbreviationUuid;
+
+  @Column(name = "single_norm")
   String singleNorm;
+
+  @Column(name = "date_of_version")
   Instant dateOfVersion;
+
+  @Column(name = "date_of_relevance")
   String dateOfRelevance;
-  @OneToOne JPANormAbbreviationDTO normAbbreviation;
+
+  @OneToOne
+  @JoinColumn(name = "norm_abbreviation_uuid")
+  JPANormAbbreviationDTO normAbbreviation;
 }

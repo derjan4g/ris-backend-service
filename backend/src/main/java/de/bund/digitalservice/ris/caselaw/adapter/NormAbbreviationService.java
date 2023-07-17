@@ -2,10 +2,9 @@ package de.bund.digitalservice.ris.caselaw.adapter;
 
 import de.bund.digitalservice.ris.caselaw.domain.lookuptable.NormAbbreviation;
 import de.bund.digitalservice.ris.caselaw.domain.lookuptable.NormAbbreviationRepository;
+import java.util.List;
 import java.util.UUID;
 import org.springframework.stereotype.Service;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
 @Service
 public class NormAbbreviationService {
@@ -15,11 +14,11 @@ public class NormAbbreviationService {
     this.repository = repository;
   }
 
-  public Mono<NormAbbreviation> getNormAbbreviationById(UUID uuid) {
+  public NormAbbreviation getNormAbbreviationById(UUID uuid) {
     return repository.findById(uuid);
   }
 
-  public Flux<NormAbbreviation> getNormAbbreviationBySearchQuery(
+  public List<NormAbbreviation> getNormAbbreviationBySearchQuery(
       String query, Integer size, Integer page) {
 
     Integer pageOffset = null;
@@ -30,7 +29,7 @@ public class NormAbbreviationService {
     return repository.findBySearchQuery(query, size, pageOffset);
   }
 
-  public Flux<NormAbbreviation> getNormAbbreviationByAwesomeSearchQuery(
+  public List<NormAbbreviation> getNormAbbreviationByAwesomeSearchQuery(
       String query, Integer size, Integer page) {
 
     Integer pageOffset = null;

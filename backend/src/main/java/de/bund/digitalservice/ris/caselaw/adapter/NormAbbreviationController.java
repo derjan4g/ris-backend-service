@@ -27,13 +27,13 @@ public class NormAbbreviationController {
       @RequestParam(value = "sz", required = false) Integer size,
       @RequestParam(value = "pg", required = false) Integer page) {
 
-    return service.getNormAbbreviationBySearchQuery(query, size, page);
+    return Flux.fromStream(service.getNormAbbreviationBySearchQuery(query, size, page).stream());
   }
 
   @GetMapping("/{uuid}")
   @PreAuthorize("isAuthenticated()")
   public Mono<NormAbbreviation> getNormAbbreviationController(@PathVariable("uuid") UUID uuid) {
-    return service.getNormAbbreviationById(uuid);
+    return Mono.just(service.getNormAbbreviationById(uuid));
   }
 
   @GetMapping("/search")
@@ -43,6 +43,7 @@ public class NormAbbreviationController {
       @RequestParam(value = "sz", required = false) Integer size,
       @RequestParam(value = "pg", required = false) Integer page) {
 
-    return service.getNormAbbreviationByAwesomeSearchQuery(query, size, page);
+    return Flux.fromStream(
+        service.getNormAbbreviationByAwesomeSearchQuery(query, size, page).stream());
   }
 }

@@ -1,5 +1,6 @@
 package de.bund.digitalservice.ris.caselaw.adapter.database.r2dbc;
 
+import de.bund.digitalservice.ris.caselaw.adapter.database.jpa.JPANormRepository;
 import de.bund.digitalservice.ris.caselaw.adapter.database.r2dbc.DocumentUnitDTO.DocumentUnitDTOBuilder;
 import de.bund.digitalservice.ris.caselaw.adapter.database.r2dbc.lookuptable.CourtDTO;
 import de.bund.digitalservice.ris.caselaw.adapter.database.r2dbc.lookuptable.DatabaseCitationStyleRepository;
@@ -65,7 +66,7 @@ public class PostgresDocumentUnitRepositoryImpl implements DocumentUnitRepositor
   private final DatabaseFieldOfLawRepository fieldOfLawRepository;
   private final DatabaseDocumentUnitFieldsOfLawRepository documentUnitFieldsOfLawRepository;
   private final DatabaseKeywordRepository keywordRepository;
-  private final DatabaseDocumentUnitNormRepository documentUnitNormRepository;
+  private final JPANormRepository documentUnitNormRepository;
   private final DatabaseDocumentationOfficeRepository documentationOfficeRepository;
   private final DatabaseDocumentUnitStatusRepository databaseDocumentUnitStatusRepository;
   private final DatabaseNormAbbreviationRepository normAbbreviationRepository;
@@ -85,7 +86,7 @@ public class PostgresDocumentUnitRepositoryImpl implements DocumentUnitRepositor
       DatabaseFieldOfLawRepository fieldOfLawRepository,
       DatabaseDocumentUnitFieldsOfLawRepository documentUnitFieldsOfLawRepository,
       DatabaseKeywordRepository keywordRepository,
-      DatabaseDocumentUnitNormRepository documentUnitNormRepository,
+      JPANormRepository documentUnitNormRepository,
       DatabaseDocumentationOfficeRepository documentationOfficeRepository,
       DatabaseDocumentUnitStatusRepository databaseDocumentUnitStatusRepository,
       DatabaseNormAbbreviationRepository normAbbreviationRepository,
@@ -964,15 +965,10 @@ public class PostgresDocumentUnitRepositoryImpl implements DocumentUnitRepositor
   }
 
   private Mono<DocumentUnitDTO> injectNorms(DocumentUnitDTO documentUnitDTO) {
-    return documentUnitNormRepository
-        .findAllByDocumentUnitId(documentUnitDTO.getId())
-        .flatMap(this::injectNormAbbreviation)
-        .collectList()
-        .map(
-            documentUnitNormDTOs -> {
-              documentUnitDTO.setNorms(documentUnitNormDTOs);
-              return documentUnitDTO;
-            });
+    List<DocumentUnitNormDTO> norms =
+        documentUnitNormRepository.findAllByDocumentUnitId(documentUnitDTO.getId());
+    documentUnitDTO.setNorms(norms);
+    return Mono.just(documentUnitDTO);
   }
 
   private Mono<DocumentUnitNormDTO> injectNormAbbreviation(

@@ -1,8 +1,8 @@
 package de.bund.digitalservice.ris.caselaw.adapter.transformer;
 
 import de.bund.digitalservice.ris.caselaw.adapter.database.jpa.JPAFieldOfLawDTO;
+import de.bund.digitalservice.ris.caselaw.adapter.database.jpa.JPAFieldOfLawNormDTO;
 import de.bund.digitalservice.ris.caselaw.adapter.database.jpa.JPAKeywordDTO;
-import de.bund.digitalservice.ris.caselaw.adapter.database.jpa.JPANormDTO;
 import de.bund.digitalservice.ris.caselaw.adapter.database.r2dbc.lookuptable.FieldOfLawDTO;
 import de.bund.digitalservice.ris.caselaw.domain.lookuptable.fieldoflaw.FieldOfLaw;
 import de.bund.digitalservice.ris.caselaw.domain.lookuptable.fieldoflaw.FieldOfLawXml;
@@ -84,19 +84,19 @@ public class FieldOfLawTransformer {
     return jpaKeywordDTOs;
   }
 
-  private static Set<JPANormDTO> transformNormsToJPADTOs(Set<NormXml> normXmls) {
+  private static Set<JPAFieldOfLawNormDTO> transformNormsToJPADTOs(Set<NormXml> normXmls) {
     if (normXmls == null) {
       return Collections.emptySet();
     }
 
-    Set<JPANormDTO> jpaNormDTOs = new HashSet<>();
+    Set<JPAFieldOfLawNormDTO> jpaFieldOfLawNormDTOS = new HashSet<>();
     normXmls.forEach(
         normXml ->
-            jpaNormDTOs.add(
-                JPANormDTO.builder()
+            jpaFieldOfLawNormDTOS.add(
+                JPAFieldOfLawNormDTO.builder()
                     .abbreviation(normXml.getAbbreviation())
                     .singleNormDescription(normXml.getSingleNormDescription())
                     .build()));
-    return jpaNormDTOs;
+    return jpaFieldOfLawNormDTOS;
   }
 }

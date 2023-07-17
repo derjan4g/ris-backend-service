@@ -52,7 +52,7 @@ public class JPAFieldOfLawDTO {
 
   @OneToMany(cascade = CascadeType.ALL)
   @JoinColumn(name = "field_of_law_id")
-  Set<JPANormDTO> norms;
+  Set<JPAFieldOfLawNormDTO> norms;
 
   @Column(name = "children_count")
   Integer childrenCount;

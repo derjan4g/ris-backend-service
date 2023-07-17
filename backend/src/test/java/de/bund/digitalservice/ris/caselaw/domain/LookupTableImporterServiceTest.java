@@ -15,9 +15,9 @@ import de.bund.digitalservice.ris.caselaw.adapter.database.jpa.JPADocumentTypeDT
 import de.bund.digitalservice.ris.caselaw.adapter.database.jpa.JPADocumentTypeRepository;
 import de.bund.digitalservice.ris.caselaw.adapter.database.jpa.JPAFieldOfLawDTO;
 import de.bund.digitalservice.ris.caselaw.adapter.database.jpa.JPAFieldOfLawLinkRepository;
+import de.bund.digitalservice.ris.caselaw.adapter.database.jpa.JPAFieldOfLawNormDTO;
 import de.bund.digitalservice.ris.caselaw.adapter.database.jpa.JPAFieldOfLawRepository;
 import de.bund.digitalservice.ris.caselaw.adapter.database.jpa.JPAKeywordDTO;
-import de.bund.digitalservice.ris.caselaw.adapter.database.jpa.JPANormDTO;
 import de.bund.digitalservice.ris.caselaw.adapter.database.r2dbc.lookuptable.CitationStyleDTO;
 import de.bund.digitalservice.ris.caselaw.adapter.database.r2dbc.lookuptable.CourtDTO;
 import de.bund.digitalservice.ris.caselaw.adapter.database.r2dbc.lookuptable.DatabaseCitationStyleRepository;
@@ -240,15 +240,15 @@ class LookupTableImporterServiceTest {
 
   @Test
   void testImportFieldOfLawLookupTable() {
-    JPANormDTO childNorm1 =
-        JPANormDTO.builder()
+    JPAFieldOfLawNormDTO childNorm1 =
+        JPAFieldOfLawNormDTO.builder()
             .jpaFieldOfLawDTO(null)
             .abbreviation("normabk 2.1")
             .singleNormDescription("§ 2.1")
             .build();
-    JPANormDTO childNorm2 =
-        JPANormDTO.builder().jpaFieldOfLawDTO(null).abbreviation("normabk 2.2").build();
-    Set<JPANormDTO> childNorms = Set.of(childNorm1, childNorm2);
+    JPAFieldOfLawNormDTO childNorm2 =
+        JPAFieldOfLawNormDTO.builder().jpaFieldOfLawDTO(null).abbreviation("normabk 2.2").build();
+    Set<JPAFieldOfLawNormDTO> childNorms = Set.of(childNorm1, childNorm2);
 
     JPAKeywordDTO childKeyword1 =
         JPAKeywordDTO.builder().jpaFieldOfLawDTO(null).value("schlagwort 2.1").build();

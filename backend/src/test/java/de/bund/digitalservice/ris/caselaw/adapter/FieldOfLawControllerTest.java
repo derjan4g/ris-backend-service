@@ -80,7 +80,7 @@ class FieldOfLawControllerTest {
 
   @Test
   void testGetTreeForFieldOfLaw() {
-    when(service.getTreeForFieldOfLaw("root")).thenReturn(Mono.empty());
+    when(service.getTreeForFieldOfLaw("root")).thenReturn(null);
 
     risWebTestClient
         .withDefaultLogin()

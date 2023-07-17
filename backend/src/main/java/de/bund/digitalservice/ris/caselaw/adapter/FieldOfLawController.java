@@ -50,6 +50,6 @@ public class FieldOfLawController {
   @GetMapping(value = "{identifier}/tree")
   @PreAuthorize("isAuthenticated()")
   public Mono<FieldOfLaw> getTreeForFieldOfLaw(@PathVariable String identifier) {
-    return service.getTreeForFieldOfLaw(identifier);
+    return Mono.just(service.getTreeForFieldOfLaw(identifier));
   }
 }

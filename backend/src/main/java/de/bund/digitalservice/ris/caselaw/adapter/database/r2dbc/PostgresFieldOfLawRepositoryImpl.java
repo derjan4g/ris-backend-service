@@ -1,5 +1,6 @@
 package de.bund.digitalservice.ris.caselaw.adapter.database.r2dbc;
 
+import de.bund.digitalservice.ris.caselaw.adapter.database.jpa.JPAFieldOfLawDTO;
 import de.bund.digitalservice.ris.caselaw.adapter.database.jpa.JPAFieldOfLawRepository;
 import de.bund.digitalservice.ris.caselaw.adapter.database.r2dbc.lookuptable.DatabaseFieldOfLawRepository;
 import de.bund.digitalservice.ris.caselaw.adapter.database.r2dbc.lookuptable.FieldOfLawDTO;
@@ -12,6 +13,7 @@ import de.bund.digitalservice.ris.caselaw.domain.FieldOfLawRepository;
 import de.bund.digitalservice.ris.caselaw.domain.lookuptable.fieldoflaw.FieldOfLaw;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
@@ -58,25 +60,18 @@ public class PostgresFieldOfLawRepositoryImpl implements FieldOfLawRepository {
 
   @Override
   @Transactional(transactionManager = "jpaTransactionManager")
-  public Mono<FieldOfLaw> findByIdentifier(String identifier) {
-    return Mono.just(
-        FieldOfLawTransformer.transformJPADTOToDomain(
-            jPAFieldOfLawRepository.findFirstByIdentifier(identifier)));
+  public FieldOfLaw findByIdentifier(String identifier) {
+    return FieldOfLawTransformer.transformJPADTOToDomain(
+        jPAFieldOfLawRepository.findFirstByIdentifier(identifier));
   }
 
   @Override
-  public Mono<FieldOfLaw> findParentByChild(FieldOfLaw child) {
-    return databaseFieldOfLawRepository
-        .findByIdentifier(child.identifier())
-        .flatMap(
-            childDTO -> {
-              if (childDTO.getParentId() != null) {
-                return databaseFieldOfLawRepository.findById(childDTO.getParentId());
-              }
-              return Mono.just(childDTO);
-            })
-        .flatMap(this::injectAdditionalInformation)
-        .map(FieldOfLawTransformer::transformToDomain);
+  @Transactional(transactionManager = "jpaTransactionManager")
+  public FieldOfLaw findParentByChild(FieldOfLaw child) {
+    JPAFieldOfLawDTO fieldOfLaw = jPAFieldOfLawRepository.findFirstByIdentifier(child.identifier());
+    JPAFieldOfLawDTO parent = fieldOfLaw.getParentFieldOfLaw();
+    return FieldOfLawTransformer.transformJPADTOToDomain(
+        Objects.requireNonNullElse(parent, fieldOfLaw));
   }
 
   @Override

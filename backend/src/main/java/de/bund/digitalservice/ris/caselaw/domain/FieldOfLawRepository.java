@@ -14,9 +14,9 @@ public interface FieldOfLawRepository {
 
   Flux<FieldOfLaw> findAllByParentIdentifierOrderByIdentifierAsc(String identifier);
 
-  Mono<FieldOfLaw> findByIdentifier(String identifier);
+  FieldOfLaw findByIdentifier(String identifier);
 
-  Mono<FieldOfLaw> findParentByChild(FieldOfLaw child);
+  FieldOfLaw findParentByChild(FieldOfLaw child);
 
   Flux<FieldOfLaw> findAllByOrderByIdentifierAsc(Pageable pageable);
 

@@ -140,10 +140,10 @@ class FieldOfLawServiceTest {
   }
 
   @Test
-  void testGetTreeForFieldOfLaw_withFieldNumberDoesntExist() {
-    when(repository.findByIdentifier("test")).thenReturn(Mono.empty());
+  void testGetTreeForFieldOfLaw_withFieldDoesntExist() {
+    when(repository.findByIdentifier("test")).thenReturn(null);
 
-    StepVerifier.create(service.getTreeForFieldOfLaw("test")).verifyComplete();
+    service.getTreeForFieldOfLaw("test");
 
     verify(repository, times(1)).findByIdentifier("test");
     verify(repository, never()).findParentByChild(any(FieldOfLaw.class));
@@ -152,10 +152,10 @@ class FieldOfLawServiceTest {
   @Test
   void testGetTreeForFieldOfLaw_withFieldNumberAtTopLevel() {
     FieldOfLaw child = FieldOfLaw.builder().identifier("test").build();
-    when(repository.findByIdentifier("test")).thenReturn(Mono.just(child));
+    when(repository.findByIdentifier("test")).thenReturn(child);
     when(repository.findParentByChild(child)).thenReturn(Mono.empty());
 
-    StepVerifier.create(service.getTreeForFieldOfLaw("test")).verifyComplete();
+    service.getTreeForFieldOfLaw("test");
 
     verify(repository, times(1)).findByIdentifier("test");
     verify(repository, times(1)).findParentByChild(child);
@@ -164,19 +164,15 @@ class FieldOfLawServiceTest {
   @Test
   void testGetTreeForFieldOfLaw_withFieldNumberAtSecondLevel() {
     FieldOfLaw child = FieldOfLaw.builder().identifier("child").build();
-    when(repository.findByIdentifier("child")).thenReturn(Mono.just(child));
+    when(repository.findByIdentifier("child")).thenReturn(child);
     FieldOfLaw parent =
         FieldOfLaw.builder().identifier("parent").children(new ArrayList<>()).build();
     when(repository.findParentByChild(child)).thenReturn(Mono.just(parent));
     when(repository.findParentByChild(parent)).thenReturn(Mono.just(parent));
 
-    StepVerifier.create(service.getTreeForFieldOfLaw("child"))
-        .consumeNextWith(
-            result -> {
-              assertThat(result.identifier()).isEqualTo("parent");
-              assertThat(result.children()).extracting("identifier").containsExactly("child");
-            })
-        .verifyComplete();
+    var result = service.getTreeForFieldOfLaw("child");
+    assertThat(result.identifier()).isEqualTo("parent");
+    assertThat(result.children()).extracting("identifier").containsExactly("child");
 
     verify(repository, times(1)).findByIdentifier("child");
     verify(repository, times(1)).findParentByChild(child);

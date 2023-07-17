@@ -154,24 +154,24 @@ public class FieldOfLawService {
     return repository.findAllByParentIdentifierOrderByIdentifierAsc(identifier);
   }
 
-  public Mono<FieldOfLaw> getTreeForFieldOfLaw(String identifier) {
-    return repository.findByIdentifier(identifier).flatMap(this::findParent);
+  public FieldOfLaw getTreeForFieldOfLaw(String identifier) {
+    var fieldOfLaw = repository.findByIdentifier(identifier);
+    if (fieldOfLaw != null) {
+      return findParent(fieldOfLaw);
+    }
+    return null;
   }
 
-  private Mono<FieldOfLaw> findParent(FieldOfLaw child) {
+  private FieldOfLaw findParent(FieldOfLaw child) {
 
-    return repository
-        .findParentByChild(child)
-        .flatMap(
-            parent -> {
-              if (child.identifier().equals(parent.identifier())) {
-                return Mono.just(child);
-              }
+    FieldOfLaw parent = repository.findParentByChild(child);
+    if (child.identifier().equals(parent.identifier())) {
+      return child;
+    }
 
-              parent.children().add(child);
+    parent.children().add(child);
 
-              return findParent(parent);
-            });
+    return findParent(parent);
   }
 
   public Mono<List<FieldOfLaw>> getFieldsOfLawForDocumentUnit(UUID documentUnitUuid) {

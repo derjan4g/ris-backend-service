@@ -58,6 +58,48 @@ public class FieldOfLawTransformer {
         .build();
   }
 
+  public static FieldOfLaw transformJPADTOToDomain(JPAFieldOfLawDTO jPAFieldOfLawDTO) {
+    List<Keyword> keywords = null;
+    if (jPAFieldOfLawDTO.getKeywords() != null) {
+      keywords =
+          jPAFieldOfLawDTO.getKeywords().stream()
+              .map(keywordDTO -> Keyword.builder().value(keywordDTO.getValue()).build())
+              .toList();
+    }
+
+    List<Norm> norms = null;
+    if (jPAFieldOfLawDTO.getNorms() != null) {
+      norms =
+          jPAFieldOfLawDTO.getNorms().stream()
+              .map(
+                  normDTO ->
+                      Norm.builder()
+                          .abbreviation(normDTO.getAbbreviation())
+                          .singleNormDescription(normDTO.getSingleNormDescription())
+                          .build())
+              .toList();
+    }
+
+    List<String> linkedFields = null;
+    if (jPAFieldOfLawDTO.getLinkedFieldsOfLaw() != null) {
+      linkedFields =
+          jPAFieldOfLawDTO.getLinkedFieldsOfLaw().stream()
+              .map(FieldOfLawDTO::getIdentifier)
+              .toList();
+    }
+
+    return FieldOfLaw.builder()
+        .id(jPAFieldOfLawDTO.getId())
+        .childrenCount(jPAFieldOfLawDTO.getChildrenCount())
+        .identifier(jPAFieldOfLawDTO.getIdentifier())
+        .text(jPAFieldOfLawDTO.getText())
+        .linkedFields(linkedFields)
+        .keywords(keywords)
+        .norms(norms)
+        .children(new ArrayList<>())
+        .build();
+  }
+
   public static JPAFieldOfLawDTO transformToJPADTO(FieldOfLawXml fieldOfLawXml) {
     return JPAFieldOfLawDTO.builder()
         .id(fieldOfLawXml.getId())

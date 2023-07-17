@@ -1,5 +1,6 @@
 package de.bund.digitalservice.ris.caselaw.adapter.database.r2dbc;
 
+import de.bund.digitalservice.ris.caselaw.adapter.database.jpa.JPAFieldOfLawRepository;
 import de.bund.digitalservice.ris.caselaw.adapter.database.r2dbc.lookuptable.DatabaseFieldOfLawRepository;
 import de.bund.digitalservice.ris.caselaw.adapter.database.r2dbc.lookuptable.FieldOfLawDTO;
 import de.bund.digitalservice.ris.caselaw.adapter.database.r2dbc.lookuptable.FieldOfLawKeywordRepository;
@@ -21,6 +22,7 @@ import reactor.core.publisher.Mono;
 public class PostgresFieldOfLawRepositoryImpl implements FieldOfLawRepository {
 
   DatabaseFieldOfLawRepository databaseFieldOfLawRepository;
+  JPAFieldOfLawRepository jPAFieldOfLawRepository;
   FieldOfLawKeywordRepository fieldOfLawKeywordRepository;
   NormRepository normRepository;
   FieldOfLawLinkRepository fieldOfLawLinkRepository;
@@ -53,9 +55,8 @@ public class PostgresFieldOfLawRepositoryImpl implements FieldOfLawRepository {
 
   @Override
   public Mono<FieldOfLaw> findByIdentifier(String identifier) {
-    return databaseFieldOfLawRepository
+    return jPAFieldOfLawRepository
         .findByIdentifier(identifier)
-        .flatMap(this::injectAdditionalInformation)
         .map(FieldOfLawTransformer::transformToDomain);
   }
 

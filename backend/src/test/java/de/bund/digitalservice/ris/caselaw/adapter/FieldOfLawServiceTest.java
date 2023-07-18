@@ -153,7 +153,7 @@ class FieldOfLawServiceTest {
   void testGetTreeForFieldOfLaw_withFieldNumberAtTopLevel() {
     FieldOfLaw child = FieldOfLaw.builder().identifier("test").build();
     when(repository.findByIdentifier("test")).thenReturn(child);
-    when(repository.findParentByChild(child)).thenReturn(Mono.empty());
+    when(repository.findParentByChild(child)).thenReturn(null);
 
     service.getTreeForFieldOfLaw("test");
 
@@ -167,8 +167,8 @@ class FieldOfLawServiceTest {
     when(repository.findByIdentifier("child")).thenReturn(child);
     FieldOfLaw parent =
         FieldOfLaw.builder().identifier("parent").children(new ArrayList<>()).build();
-    when(repository.findParentByChild(child)).thenReturn(Mono.just(parent));
-    when(repository.findParentByChild(parent)).thenReturn(Mono.just(parent));
+    when(repository.findParentByChild(child)).thenReturn(parent);
+    when(repository.findParentByChild(parent)).thenReturn(parent);
 
     var result = service.getTreeForFieldOfLaw("child");
     assertThat(result.identifier()).isEqualTo("parent");

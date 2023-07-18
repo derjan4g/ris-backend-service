@@ -165,7 +165,7 @@ public class FieldOfLawService {
   private FieldOfLaw findParent(FieldOfLaw child) {
 
     FieldOfLaw parent = repository.findParentByChild(child);
-    if (child.identifier().equals(parent.identifier())) {
+    if (parent == null || child.identifier().equals(parent.identifier())) {
       return child;
     }
 

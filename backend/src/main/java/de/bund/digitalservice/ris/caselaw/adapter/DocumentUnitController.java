@@ -14,6 +14,7 @@ import de.bund.digitalservice.ris.norms.framework.adapter.input.restapi.OpenApiC
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.nio.ByteBuffer;
+import java.util.List;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -191,5 +192,12 @@ public class DocumentUnitController {
         .validateSingleNorm(singleNormValidationInfo)
         .map(ResponseEntity::ok)
         .onErrorReturn(ResponseEntity.internalServerError().build());
+  }
+
+  @PostMapping(value = "/validateSingleNorms")
+  @PreAuthorize("isAuthenticated()")
+  public Flux<String> validateSingleNorms(
+      @RequestBody List<SingleNormValidationInfo> singleNormValidationInfos) {
+    return service.validateSingleNorms(singleNormValidationInfos);
   }
 }

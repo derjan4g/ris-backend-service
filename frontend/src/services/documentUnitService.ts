@@ -7,6 +7,7 @@ import { DocumentUnitListEntry } from "@/domain/documentUnitListEntry"
 import LinkedDocumentUnit from "@/domain/linkedDocumentUnit"
 import { SingleNormValidationInfo } from "@/domain/normReference"
 import { PageableService, Page } from "@/shared/components/Pagination.vue"
+import { ValidationResponse } from "@/stores/singleNormValidations"
 
 interface DocumentUnitService {
   getAllListEntries: PageableService<DocumentUnitListEntry>
@@ -23,6 +24,9 @@ interface DocumentUnitService {
   validateSingleNorm(
     singleNormValidationInfo: SingleNormValidationInfo,
   ): Promise<ServiceResponse<unknown>>
+  validateSingleNorms(
+    documentUnitUuid: DocumentUnit["uuid"],
+  ): Promise<ServiceResponse<ValidationResponse[]>>
 }
 
 const service: DocumentUnitService = {
@@ -174,6 +178,24 @@ const service: DocumentUnitService = {
     if (response.status >= 300) {
       response.error = {
         title: "Einzelnorm konnte nicht validiert werden.",
+      }
+    }
+    return response
+  },
+
+  async validateSingleNorms(uuid: DocumentUnit["uuid"]) {
+    const response = await httpClient.get<ValidationResponse[]>(
+      `caselaw/documentunits/${uuid}/singleNormValidations`,
+      {
+        headers: {
+          Accept: "text/plain",
+          "Content-Type": "application/json",
+        },
+      },
+    )
+    if (response.status >= 300) {
+      response.error = {
+        title: "Einzelnormen konnte nicht validiert werden.",
       }
     }
     return response

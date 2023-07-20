@@ -1,9 +1,11 @@
 <script lang="ts" setup>
-import { computed, h } from "vue"
+import { storeToRefs } from "pinia"
+import { computed, h, onMounted } from "vue"
 import NormReferenceInput from "@/components/NormReferenceInput.vue"
 import NormReference from "@/domain/normReference"
 import { withSummarizer } from "@/shared/components/DataSetSummary.vue"
 import EditableList from "@/shared/components/EditableListCaselaw.vue"
+import { useSingleNormValidationsStore } from "@/stores/singleNormValidations"
 
 const props = defineProps<{
   modelValue: NormReference[] | undefined
@@ -12,6 +14,8 @@ const props = defineProps<{
 const emit = defineEmits<{
   "update:modelValue": [value?: NormReference[]]
 }>()
+const store = useSingleNormValidationsStore()
+const { validations } = storeToRefs(store)
 
 const norms = computed({
   get: () => {
@@ -50,6 +54,10 @@ function decisionSummarizer(normEntry: NormReference) {
 }
 
 const NormsSummary = withSummarizer(decisionSummarizer)
+
+onMounted(() => {
+  console.log(validations)
+})
 </script>
 <template>
   <div class="bg-white p-16">

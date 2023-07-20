@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import dayjs from "dayjs"
-import { computed, ref, watchEffect } from "vue"
+import { storeToRefs } from "pinia"
+import { computed, onMounted, ref, watchEffect } from "vue"
 import { useRoute, useRouter } from "vue-router"
 import DocumentUnitInfoPanel from "@/components/DocumentUnitInfoPanel.vue"
 import { useCaseLawMenuItems } from "@/composables/useCaseLawMenuItems"
@@ -9,6 +10,7 @@ import { useToggleStateInRouteQuery } from "@/composables/useToggleStateInRouteQ
 import DocumentUnit from "@/domain/documentUnit"
 import NavbarSide from "@/shared/components/NavbarSide.vue"
 import SideToggle from "@/shared/components/SideToggle.vue"
+import { useSingleNormValidationsStore } from "@/stores/singleNormValidations"
 
 const props = defineProps<{ documentUnit: DocumentUnit }>()
 const route = useRoute()
@@ -21,6 +23,9 @@ const navigationIsOpen = useToggleStateInRouteQuery(
   route,
   router.replace,
 )
+
+const store = useSingleNormValidationsStore()
+const { validations } = storeToRefs(store)
 
 const fileNumberInfo = computed(
   () => props.documentUnit.coreData.fileNumbers?.[0],
@@ -57,10 +62,15 @@ const secondRowInfos = computed(() => [
 watchEffect(() => {
   statusBadge.value = useStatusBadge(props.documentUnit.status).value
 })
+
+onMounted(() => {
+  store.getValidations(props.documentUnit.uuid)
+})
 </script>
 
 <template>
   <div class="flex w-screen grow">
+    <p>{{ validations }}</p>
     <div
       class="sticky top-0 z-20 flex flex-col border-r-1 border-solid border-gray-400 bg-white"
     >

@@ -445,8 +445,18 @@ public class DocumentUnitService {
     return Mono.just("Validation error");
   }
 
-  public Flux<String> validateSingleNorms(
-      List<SingleNormValidationInfo> singleNormValidationInfos) {
-    return Flux.fromIterable(singleNormValidationInfos).flatMapSequential(this::validateSingleNorm);
+  public Flux<String> validateSingleNorms(UUID documentUnitUuid) {
+    return this.getByUuid(documentUnitUuid)
+        .map(DocumentUnit::contentRelatedIndexing)
+        .map(ContentRelatedIndexing::norms)
+        .flux()
+        .flatMap(Flux::fromIterable)
+        .map(
+            norm ->
+                SingleNormValidationInfo.builder()
+                    .singleNorm(norm.singleNorm())
+                    .normAbbreviation(norm.normAbbreviation().abbreviation())
+                    .build())
+        .flatMapSequential(this::validateSingleNorm);
   }
 }

@@ -7,7 +7,7 @@ export type ValidationResponse = "Ok" | "Validation error"
 export const useSingleNormValidationsStore = defineStore(
   "single-norm-validations",
   () => {
-    const validations = ref<ValidationResponse[]>(["Ok"])
+    const validations = ref<ValidationResponse[]>()
 
     async function getValidations(uuid: string): Promise<void> {
       const response = await documentUnitService.validateSingleNorms(uuid)

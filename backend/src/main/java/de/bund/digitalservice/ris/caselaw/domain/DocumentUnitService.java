@@ -455,8 +455,16 @@ public class DocumentUnitService {
             norm ->
                 SingleNormValidationInfo.builder()
                     .singleNorm(norm.singleNorm())
-                    .normAbbreviation(norm.normAbbreviation().abbreviation())
+                    .normAbbreviation(getNormAbbreviation(norm))
                     .build())
         .flatMapSequential(this::validateSingleNorm);
+  }
+
+  private String getNormAbbreviation(DocumentUnitNorm norm) {
+    if (norm != null
+        && norm.normAbbreviation() != null
+        && norm.normAbbreviation().abbreviation() != null) {
+      return norm.normAbbreviation().abbreviation();
+    } else return null;
   }
 }

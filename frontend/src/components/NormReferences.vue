@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { storeToRefs } from "pinia"
-import { computed, h, onMounted } from "vue"
+import { computed, h } from "vue"
 import NormReferenceInput from "@/components/NormReferenceInput.vue"
 import NormReference from "@/domain/normReference"
 import { withSummarizer } from "@/shared/components/DataSetSummary.vue"
@@ -54,12 +54,9 @@ function decisionSummarizer(normEntry: NormReference) {
 }
 
 const NormsSummary = withSummarizer(decisionSummarizer)
-
-onMounted(() => {
-  console.log(validations)
-})
 </script>
 <template>
+  <p>{{ validations }}</p>
   <div class="bg-white p-16">
     <h2 id="norms" class="ds-label-02-bold mb-[1rem]">Normen</h2>
     <div class="flex flex-row">

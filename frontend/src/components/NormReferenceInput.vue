@@ -47,7 +47,7 @@ const normAbbreviation = computed({
   },
 })
 
-async function validateNorm() {
+async function validateNorm(): Promise<boolean> {
   validationErrors.value = []
 
   if (norm.value?.updateValidationErrors) {

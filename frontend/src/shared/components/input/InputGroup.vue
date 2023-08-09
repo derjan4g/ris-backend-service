@@ -1,5 +1,7 @@
 <script lang="ts" setup>
 import { computed, ref, watch } from "vue"
+import { useValidationStore } from "@/composables/useValidationStore"
+import { fieldLabels } from "@/fields/caselaw"
 import InputElement from "@/shared/components/input/InputElement.vue"
 import InputFieldComponent from "@/shared/components/input/InputField.vue"
 import {
@@ -57,6 +59,8 @@ const fieldRows = computed(() => {
 // A writable computed value (with getter + setter) is not possible due to the depth
 // of the model that gets split across the inputs.
 const inputValues = ref<InputValues>({})
+const fieldNames = Object.keys(fieldLabels)
+const validationStore = useValidationStore<(typeof fieldNames)[number]>()
 
 watch(
   () => props.modelValue,
@@ -87,22 +91,20 @@ watch(
         v-for="field in group"
         :id="field.name"
         :key="field.name"
+        v-slot="slotProps"
         :label="field.label"
         :label-position="field.inputAttributes.labelPosition"
         :required="field.required"
         :style="fieldStyle"
+        :validation-error="validationStore.getByField(field.name)"
       >
         <InputElement
           :id="field.name"
           v-model="inputValues[field.name]"
           :attributes="field.inputAttributes"
+          :has-error="slotProps.hasError"
           :type="field.type"
-          :validation-error="
-            props.validationErrors &&
-            props.validationErrors.find(
-              (err) => err.instance.split('\.')[1] === field.name,
-            )
-          "
+          @update:validation-error="slotProps.updateValidationError"
         />
       </InputFieldComponent>
     </div>

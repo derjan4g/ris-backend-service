@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, ref, useAttrs } from "vue"
+import { computed, useAttrs } from "vue"
 import ComboboxInput from "@/components/ComboboxInput.vue"
 import CheckboxInput from "@/shared/components/input/CheckboxInput.vue"
 import ChipsDateInput from "@/shared/components/input/ChipsDateInput.vue"
@@ -26,6 +26,7 @@ interface Props {
   attributes: InputAttributes
   validationError?: ValidationError
   disableError?: boolean
+  hasError?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -37,7 +38,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emit = defineEmits<{
   "update:modelValue": [value: ModelType]
-  "update:validationError": [value: ValidationError | undefined]
+  "update:validationError": [value?: ValidationError]
 }>()
 
 const fallthroughAttributes = useAttrs()
@@ -82,15 +83,9 @@ const value = computed({
   set: (newValue) => emit("update:modelValue", newValue),
 })
 
-const errorMessage = ref<ValidationError | undefined>(props.validationError)
-
-const validationError = computed({
-  get: () => props.validationError,
-  set: (newValue) => {
-    errorMessage.value = newValue
-    emit("update:validationError", newValue)
-  },
-})
+function onValidationError() {
+  emit("update:validationError", undefined)
+}
 </script>
 
 <script lang="ts">
@@ -105,10 +100,6 @@ export default {
     :id="id"
     v-model="value"
     v-bind="combinedAttributes"
-    v-model:validation-error="validationError"
+    @update:validation-error="onValidationError"
   />
-  <!-- TODO this is a workaround, errors shoudld be displayes in in the InputField component in the future -->
-  <div v-if="!disableError" class="ds-label-03-reg h-16 text-red-800">
-    {{ errorMessage?.message }}
-  </div>
 </template>

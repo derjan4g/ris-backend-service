@@ -47,6 +47,7 @@ const labelConverted = computed(() => {
 const localValidationError = ref()
 
 function updateValidationError(newValidationError?: ValidationError) {
+  console.log("hi")
   localValidationError.value = newValidationError
 }
 

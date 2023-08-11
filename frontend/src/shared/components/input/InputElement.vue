@@ -82,10 +82,6 @@ const value = computed({
   get: () => props.modelValue,
   set: (newValue) => emit("update:modelValue", newValue),
 })
-
-function onValidationError() {
-  emit("update:validationError", undefined)
-}
 </script>
 
 <script lang="ts">
@@ -100,6 +96,6 @@ export default {
     :id="id"
     v-model="value"
     v-bind="combinedAttributes"
-    @update:validation-error="onValidationError"
+    @update:validation-error="$emit('update:validationError', $event)"
   />
 </template>
